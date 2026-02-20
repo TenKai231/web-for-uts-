@@ -1,12 +1,8 @@
-/* 1. Star Twinkle (Bintang Berkelip) */
-.star {
-  position: absolute;
-  background: white;
-  border-radius: 50%;
-  opacity: 0;
-  animation: twinkle linear infinite;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
+/* Keyframes (global, must not be nested inside @layer) */
 @keyframes twinkle {
   0% {
     opacity: 0;
@@ -23,19 +19,6 @@
   }
 }
 
-/* 2. Snow Animation (Lebih Halus/Subtle) */
-.snowflake {
-  position: absolute;
-  top: -20px;
-  background: white;
-  border-radius: 50%; /* Bulat sempurna */
-  opacity: 0.6;
-  pointer-events: none;
-  z-index: 10;
-  filter: blur(0.5px); /* Sedikit blur biar cinematic */
-  animation: fall linear infinite;
-}
-
 @keyframes fall {
   0% {
     transform: translateY(-10vh) translateX(0);
@@ -50,7 +33,6 @@
   }
 }
 
-/* 3. Micro Animation: Fade Up Title */
 @keyframes fadeUp {
   from {
     opacity: 0;
@@ -62,7 +44,6 @@
   }
 }
 
-/* 4. Micro Animation: Breathing/Floating 3D Model */
 @keyframes breathe {
   0%,
   100% {
@@ -70,28 +51,64 @@
   }
   50% {
     transform: translateY(-10px);
-  } /* Naik dikit */
+  }
 }
 
-.hover\:glow:hover {
-  text-shadow: 0 0 10px rgba(255, 140, 66, 0.8);
-}
-
-/* Hide Scrollbar */
+/* Hide Scrollbar (global) */
 body::-webkit-scrollbar {
   display: none;
 }
 
-/* ... kode salju dll di atas biarkan saja ... */
-
-/* === SCROLL REVEAL ANIMATION === */
+/* === SCROLL REVEAL ANIMATION (global) === */
 .reveal {
   opacity: 0;
-  transform: translateY(50px); /* Geser ke bawah 50px */
-  transition: all 1s ease-out; /* Durasi animasi halus */
+  transform: translateY(50px);
+  transition: all 1s ease-out;
 }
 
 .reveal.active {
   opacity: 1;
-  transform: translateY(0); /* Kembali ke posisi asal */
+  transform: translateY(0);
+}
+
+@layer components {
+  /* 1. Star Twinkle (Bintang Berkelip) */
+  .star {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    opacity: 0;
+    animation: twinkle linear infinite;
+  }
+
+  /* 2. Snow Animation (Lebih Halus/Subtle) */
+  .snowflake {
+    position: absolute;
+    top: -20px;
+    background: white;
+    border-radius: 50%;
+    opacity: 0.6;
+    pointer-events: none;
+    z-index: 10;
+    filter: blur(0.5px);
+    animation: fall linear infinite;
+  }
+
+  /* 3. Micro Animation: Fade Up Title */
+  .animate-fade-up {
+    animation: fadeUp 1s ease-out forwards;
+  }
+
+  .fade-up {
+    animation: fadeUp 0.6s ease-out forwards;
+  }
+
+  /* 4. Micro Animation: Breathing/Floating 3D Model */
+  .breathe {
+    animation: breathe 4s ease-in-out infinite;
+  }
+
+  .hover\:glow:hover {
+    text-shadow: 0 0 10px rgba(255, 140, 66, 0.8);
+  }
 }
