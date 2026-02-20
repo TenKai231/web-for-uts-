@@ -12,14 +12,13 @@
       rel="stylesheet"
     />
 
-    <link rel="stylesheet" href="css/input.css" />
+    <link rel="stylesheet" href="dist/output.css" />
 
     <script
       type="module"
       src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"
     ></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
 
     <script>
       tailwind.config = {
@@ -303,5 +302,85 @@
 
     <script src="js/script.js" defer></script>
     <script src="js/three-setup.js" defer></script>
+
+    <!-- Diagnostic overlay script -->
+    <script>
+      (async function () {
+        function showDiag(msg, important = false) {
+          if (document.getElementById("diag-overlay")) return;
+          const o = document.createElement("div");
+          o.id = "diag-overlay";
+          o.style.position = "fixed";
+          o.style.left = "12px";
+          o.style.right = "12px";
+          o.style.top = "12px";
+          o.style.zIndex = "9999";
+          o.style.padding = "14px 16px";
+          o.style.borderRadius = "8px";
+          o.style.background = important ? "rgba(200,40,40,0.95)" : "rgba(0,0,0,0.8)";
+          o.style.color = "white";
+          o.style.fontFamily = "system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial";
+          o.style.fontSize = "13px";
+          o.innerHTML = msg;
+          document.body.appendChild(o);
+        }
+
+        // 1) check if opened via file://
+        if (location.protocol === "file:") {
+          showDiag(
+            "<strong>Warning:</strong> You're opening the page via <code>file://</code>. Start a local server (e.g. <code>python -m http.server 8000</code>) so assets like model & CSS load correctly.",
+            true
+          );
+          return;
+        }
+
+        // 2) check built CSS exists
+        try {
+          const cssRes = await fetch("dist/output.css", { method: "HEAD" });
+          if (!cssRes.ok) {
+            showDiag(
+              "<strong>CSS not found:</strong> dist/output.css missing. Build Tailwind CSS: <code>npm install</code> then <code>npm run build:css</code> (or <code>npx postcss css/input.css -o dist/output.css</code>)",
+              true
+            );
+            return;
+          }
+        } catch (e) {
+          showDiag(
+            "<strong>CSS fetch failed:</strong> unable to fetch dist/output.css. Run the build command and ensure the file is served.",
+            true
+          );
+          return;
+        }
+
+        // 3) check model asset availability
+        const modelEl = document.getElementById("fox-3d");
+        if (modelEl) {
+          const src = modelEl.getAttribute("src");
+          if (src) {
+            try {
+              const r = await fetch(src, { method: "HEAD" });
+              if (!r.ok) {
+                showDiag(
+                  `<strong>3D model not found:</strong> ${src} returned ${r.status}. Place the model in assets/models/ or fix the path.`,
+                  true
+                );
+                return;
+              }
+            } catch (e) {
+              showDiag(
+                `<strong>3D model fetch error:</strong> Could not reach ${src}. Check path/CORS and server. (${e.message})`,
+                true
+              );
+              return;
+            }
+          }
+        }
+
+        // 4) no issues detected by quick tests
+        // Optionally remove any existing diag overlay
+        const existing = document.getElementById("diag-overlay");
+        if (existing) existing.remove();
+      })();
+    </script>
   </body>
 </html>
