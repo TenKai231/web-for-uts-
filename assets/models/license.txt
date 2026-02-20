@@ -1,0 +1,11 @@
+Model Information:
+* title:	Fox in the Winter Forest
+* source:	https://sketchfab.com/3d-models/fox-in-the-winter-forest-121b460114d947dcb9a82b8d8de0cafe
+* author:	IForgetHowToRead (https://sketchfab.com/dirb)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Fox in the Winter Forest" (https://sketchfab.com/3d-models/fox-in-the-winter-forest-121b460114d947dcb9a82b8d8de0cafe) by IForgetHowToRead (https://sketchfab.com/dirb) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
