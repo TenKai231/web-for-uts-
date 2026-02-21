@@ -240,6 +240,32 @@ document.addEventListener("DOMContentLoaded", () => {
     videoObserver.observe(docVideo);
   }
 
+  // === 4.5 BAR CHART ANIMATION (Grow on scroll) ===
+  const barElements = document.querySelectorAll('.bar-fill');
+  if (barElements && barElements.length) {
+    // ensure start at zero so percent heights animate correctly
+    barElements.forEach((b) => {
+      b.style.height = '0%';
+      const span = b.querySelector('span');
+      if (span) span.style.opacity = '0';
+    });
+
+    const barObserver = new IntersectionObserver((entries, obs) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const bar = entry.target;
+        const targetHeight = bar.dataset.target || '50%';
+        // apply height (percentage string like "75%")
+        bar.style.height = targetHeight;
+        const span = bar.querySelector('span');
+        if (span) span.style.opacity = '1';
+        obs.unobserve(bar);
+      });
+    }, { threshold: 0.35 });
+
+    barElements.forEach((b) => barObserver.observe(b));
+  }
+
   // === 5. LEAFLET INTERACTIVE MAP SYSTEM ===
   const mapElement = document.getElementById("fox-map");
   if (mapElement && typeof L !== "undefined") {
