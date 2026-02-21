@@ -218,4 +218,62 @@ document.addEventListener("DOMContentLoaded", () => {
   );
 
   revealElements.forEach((el) => revealObserver.observe(el));
+
+  // === 4. VIDEO AUTOPLAY SYSTEM (Scroll Play/Pause) ===
+  const docVideo = document.getElementById("doc-video");
+  if (docVideo) {
+    const videoObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.intersectionRatio >= 0.5) {
+            docVideo.play().catch((err) => {
+              console.log("Autoplay prevented:", err);
+            });
+          } else {
+            docVideo.pause();
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    videoObserver.observe(docVideo);
+  }
+
+  // === 5. LEAFLET INTERACTIVE MAP SYSTEM ===
+  const mapElement = document.getElementById("fox-map");
+  if (mapElement && typeof L !== "undefined") {
+    const map = L.map("fox-map", {
+      zoomControl: false,
+      scrollWheelZoom: false,
+    }).setView([60.0, 10.0], 2);
+
+    L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+      subdomains: "abcd",
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://carto.com/">CartoDB</a>'
+    }).addTo(map);
+
+    function createPulseIcon(colorClass) {
+      return L.divIcon({
+        className: "custom-div-icon",
+        html: `<div class="custom-pulse-marker ${colorClass}"><div class="pulse"></div><div class="dot"></div></div>`,
+        iconSize: [14, 14],
+        iconAnchor: [7, 7]
+      });
+    }
+
+    L.marker([64.2008, -100.4937], { icon: createPulseIcon("") })
+      .addTo(map)
+      .bindPopup("<b style='color:#FF8C42; font-family:Cinzel'>North American Fox</b><br><span style='font-size:12px; color:#9ca3af'>Tundra & Boreal Forests. Thrives in deep snow.</span>");
+
+    L.marker([60.4720, 8.4689], { icon: createPulseIcon("marker-blue") })
+      .addTo(map)
+      .bindPopup("<b style='color:#60A5FA; font-family:Cinzel'>Scandinavian Fox</b><br><span style='font-size:12px; color:#9ca3af'>Northern Europe. Hunts using magnetic fields.</span>");
+
+    L.marker([61.5240, 105.3188], { icon: createPulseIcon("marker-white") })
+      .addTo(map)
+      .bindPopup("<b style='color:#FFFFFF; font-family:Cinzel'>Siberian Fox</b><br><span style='font-size:12px; color:#9ca3af'>Russian Taiga. Survives up to -70°C.</span>");
+  }
+
 });
